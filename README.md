@@ -1,4 +1,4 @@
-# Metrolink-Advisory-Emailer
+# MetrolinkAdvisoryEmailer
 Python 3.7.2 script that emails you about MetroLink advisories for your trains.
 
 This is set up to work with the following MetroLink lines:
