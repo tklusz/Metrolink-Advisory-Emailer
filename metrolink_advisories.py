@@ -1,7 +1,7 @@
 from requests_html import HTMLSession
 from time import strftime
 from email.mime.text import MIMEText
-import datetime, smtplib, ssl, hashlib
+import datetime, smtplib, ssl, hashlib, os
 
 """
 Requires - requests_html (pip install requests_html).
@@ -12,6 +12,7 @@ GOOGLE_APP_KEY -
 Go to your Google Account, click "Security",
 then click "App passwords" in the "Signing in to Google" section, then generate
 an app password for the Mail app.
+https://support.google.com/accounts/answer/185833
 
 Use this 16 character password as the "GOOGLE_APP_KEY" variable below.
 
@@ -104,7 +105,7 @@ def send_mail(service_advisory, to_email, sender_email, password):
     This script is currently only set up to work with gmail, but you can modify it
     to use a different provider.
     """
-    print("Sending Email.")
+    print("ADVISORY - Sending Email.")
 
     port = 465
     smtp_server = "smtp.gmail.com"
@@ -135,7 +136,7 @@ def update_advisory_file(filename, advisory):
     advisory - ServiceAdvisory object.
     """
 
-    advisory_file = open(filename, "a")
+    advisory_file = open(filename, "a+")
     advisory_file.write(advisory.response + "\n")
     advisory_file.close()
 
@@ -149,6 +150,10 @@ def been_notified(filename, advisory):
     Returns:
     Boolean, True if the user has already been notified (if advisory's date and time appears in the file).
     """
+
+    if not os.path.exists(filename):
+        open(filename,"a+").close()
+
     advisory_response = advisory.response
     advisory_file = open(filename, "r")
 
@@ -185,5 +190,9 @@ def handle_advisories(response_list, reciever_email, sender_email, filename, pas
                     send_mail(ServiceAdvisory(metro_response), reciever_email, sender_email, password)
                     update_advisory_file(filename, ServiceAdvisory(metro_response))
 
-response_list = retrieve_advisories()
-handle_advisories(response_list, TO_EMAIL, SENDER_EMAIL, FILENAME, GOOGLE_APP_KEY, WEEKEND_NOTIFY)
+# Arguments and method included if you want to attempt to get this working with AWS Lambda.
+def main(event,context):
+    response_list = retrieve_advisories()
+    handle_advisories(response_list, TO_EMAIL, SENDER_EMAIL, FILENAME, GOOGLE_APP_KEY, WEEKEND_NOTIFY)
+
+main("","")
