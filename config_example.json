@@ -1,0 +1,10 @@
+{
+    "sender_email": "tylerkluszczynski@gmail.com",
+    "reciever_email": "tylerkluszczynski@gmail.com",
+    "app_password": "abcdefghijklmnop",
+    "trains": [
+        "681",
+        "604",
+        "334"
+    ]
+}

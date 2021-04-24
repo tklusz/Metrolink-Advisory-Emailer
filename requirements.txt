@@ -1,0 +1,6 @@
+lxml
+requests 
+requests-html
+click
+colorama
+beautifulsoup4
